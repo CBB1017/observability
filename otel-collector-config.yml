@@ -1,0 +1,44 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'node-exporter'
+          static_configs:
+            - targets: ['node-exporter:9100']  # Node Exporter의 주소
+
+processors:
+  batch:
+
+exporters:
+  prometheusremotewrite:
+    endpoint: "http://prometheus:9090/api/v1/write"
+    tls:
+      insecure: true
+  otlphttp:
+    endpoint: "http://loki:3100/otlp"
+  otlp:
+    endpoint: "tempo:4317"
+    tls:
+      insecure: true
+    #max_send_msg_size: 10485760
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+    logs:
+      receivers: [otlp]
+      exporters: [otlphttp]
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [batch]
+      exporters: [prometheusremotewrite]  
+
