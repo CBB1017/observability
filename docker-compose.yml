@@ -1,97 +1,82 @@
-version: '3.8'
-
-x-logging: &default-logging
-  driver: loki
-  options:
-    loki-url: 'http://localhost:3100/api/prom/push'
-    loki-pipeline-stages: |
-      - multiline:
-          firstline: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}.\d{3}'
-          max_wait_time: 3s
-      - regex:
-          expression: '^(?P<date>\d{4}-\d{2}-\d{2}) (?P<time>\d{2}:\d{2}:\d{2}.\d{3}) (?P<message>(?s:.*))$$'
+#version: '3.8'
 
 services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
+    environment:
+      - discovery.type=single-node
+      - ELASTIC_PASSWORD=changeme
+      - xpack.security.enabled=false  # 보안 설정 비활성화 (개발용)
+    ports:
+      - "9200:9200"
+    networks:
+      - monitoring
+    privileged: true
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.15.3
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+    privileged: true
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    ports:
+      - "9100:9100"
+    networks:
+      - monitoring
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+  metricbeat:
+    image: docker.elastic.co/beats/metricbeat:8.15.3
+    environment:
+      - ELASTICSEARCH_HOSTS=["http://elasticsearch:9200"]
+      - ELASTIC_PASSWORD=changeme
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+
+
+  apm-server:
+    image: docker.elastic.co/apm/apm-server:8.15.3
+    environment:
+      - output.elasticsearch.hosts=["http://elasticsearch:9200"]
+      - setup.kibana.host=http://kibana:5601
+      - apm-server.metrics.enabled=true  # 메트릭 수집 기능 활성화
+    ports:
+      - "8200:8200"  # APM 서버 포트
+    networks:
+      - monitoring
+    depends_on:
+      - elasticsearch
+
   otel-collector:
     image: otel/opentelemetry-collector:latest
     ports:
-      - 1888:1888 # pprof extension
-      - 8888:8888 # Prometheus metrics exposed by the Collector
-      - 8889:8889 # Prometheus exporter metrics
+      - 1888:1888  # pprof extension
+      - 8888:8888  # Prometheus metrics exposed by the Collector
+      - 8889:8889  # Prometheus exporter metrics
       - 13133:13133 # health_check extension
-      - 4317:4317 # OTLP gRPC receiver
-      - 4318:4318 # OTLP http receiver
+      - 4317:4317  # OTLP gRPC receiver
+      - 4318:4318  # OTLP http receiver
       - 55679:55679 # zpages extension
+    environment:
+      - RECEIVER_ENDPOINT=0.0.0.0:4317
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ./otel-collector-config.yml:/etc/otel-collector-config.yml
     networks:
       - monitoring
-
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--web.enable-remote-write-receiver'
-    ports:
-      - "9090:9090"
-    networks:
-      - monitoring
-    logging: *default-logging
-
-  loki:
-    image: grafana/loki:latest
-    ports:
-      - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
-    volumes:
-      - ./loki-config.yaml:/etc/loki/local-config.yaml
-      - loki-wal:/wal  # Mount a folder for WAL with write permission
-      - loki-chunks:/loki/chunks
-      - loki-index:/loki/index
-    user: "1000:1000"
-    networks:
-      - monitoring
-
-  tempo:
-    image: grafana/tempo:latest
-    ports:
-      - "3200:3200"
-      #- "4327:4317"
-      #- "4328:4318"
-    volumes:
-      - ./tempo-config.yaml:/etc/tempo/tempo.yaml
-      - tempo-wal:/var/tempo/wal
-      - tempo-blocks:/var/tempo/blocks
-    environment:
-      - STORAGE_LOCAL_PATH=/var/tempo/blocks
-      - METRICS_GENERATOR_STORAGE_PATH=/var/tempo/generator/wal
-    command: ["-config.file=/etc/tempo/tempo.yaml"]  # 추가된 부분
-    user: "root:root"  # 사용자 ID와 그룹 ID를 명시
-    networks:
-      - monitoring
-    logging: *default-logging
-
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    volumes:
-      - datasources:/etc/grafana/provisioning/datasources
-      - dashboards:/etc/grafana/dashboards
-    environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      - monitoring
-    depends_on:
-      - prometheus
-      - loki
-      - tempo
-    logging: *default-logging
-
-
 
   app-a:
     image: ghcr.io/blueswen/spring-boot-observability/app:latest
@@ -100,22 +85,23 @@ services:
     environment:
       - TARGET_ONE_HOST=app-b
       - TARGET_TWO_HOST=app-c
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317 # send traces to Tempo
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-        #- OTEL_JAVAAGENT_DEBUG=true
-      - OTEL_SERVICE_NAME=app-a # service name for Span
-      - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-a # add custom resource attribute to Span for Grafana Trace to Logs feature
-        # OTEL_METRICS_EXPORTER=none # disable metrics exporter
-      - MANAGEMENT_METRICS_TAGS_APPLICATION=app-a # override default value of management.metrics.tags.application in app/src/main/resources/application.properties
+      - OTEL_SERVICE_NAME=app-a
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_METRICS_ENABLED=true
+      - OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED=true
+      - OTEL_METRICS_EXPORT_INTERVAL=30000
+      - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-a
+      - MANAGEMENT_METRICS_TAGS_APPLICATION=app-a
       - JAVA_TOOL_OPTIONS="-javaagent:/etc/opentelemetry-javaagent.jar"
     ports:
       - "8080:8080"
     networks:
       - monitoring
     depends_on:
-      - node-exporter
       - otel-collector
-    logging: *default-logging
+      - apm-server
 
   app-b:
     image: ghcr.io/blueswen/spring-boot-observability/app:latest
@@ -126,10 +112,12 @@ services:
       - TARGET_TWO_HOST=app-c
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
-        #- OTEL_JAVAAGENT_DEBUG=true
       - OTEL_SERVICE_NAME=app-b
       - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-b
-      - OTEL_METRICS_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_METRICS_ENABLED=true
+      - OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED=true
+      - OTEL_METRICS_EXPORT_INTERVAL=30000
       - MANAGEMENT_METRICS_TAGS_APPLICATION=app-b
       - JAVA_TOOL_OPTIONS="-javaagent:/etc/opentelemetry-javaagent.jar"
     ports:
@@ -137,9 +125,8 @@ services:
     networks:
       - monitoring
     depends_on:
-      - node-exporter
       - otel-collector
-    logging: *default-logging
+      - apm-server
 
   app-c:
     image: ghcr.io/blueswen/spring-boot-observability/app:latest
@@ -150,10 +137,12 @@ services:
       - TARGET_TWO_HOST=app-c
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-        #- OTEL_JAVAAGENT_DEBUG=true
       - OTEL_SERVICE_NAME=app-c
       - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-c
-      - OTEL_METRICS_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=otlp
+      - OTEL_METRICS_ENABLED=true
+      - OTEL_INSTRUMENTATION_JVM_METRICS_ENABLED=true
+      - OTEL_METRICS_EXPORT_INTERVAL=30000
       - MANAGEMENT_METRICS_TAGS_APPLICATION=app-c
       - JAVA_TOOL_OPTIONS="-javaagent:/etc/opentelemetry-javaagent.jar"
     ports:
@@ -161,9 +150,8 @@ services:
     networks:
       - monitoring
     depends_on:
-      - node-exporter
       - otel-collector
-    logging: *default-logging
+      - apm-server
 
   postgres:
     image: postgres:16.2
@@ -175,7 +163,6 @@ services:
       - "5432:5432"
     networks:
       - monitoring
-    logging: *default-logging
 
   redis:
     image: redis:7.2.4
@@ -183,26 +170,7 @@ services:
       - "6379:6379"
     networks:
       - monitoring
-    logging: *default-logging
-
-  node-exporter:
-    image: prom/node-exporter
-    ports:
-      - "9100:9100"
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-    networks:
-      - monitoring
 
 networks:
   monitoring:
     driver: bridge
-volumes:
-  loki-wal:
-  loki-chunks:
-  loki-index:
-  tempo-wal:
-  tempo-blocks:
-  datasources:
-  dashboards:

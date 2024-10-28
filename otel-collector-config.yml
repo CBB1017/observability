@@ -11,22 +11,29 @@ receivers:
         - job_name: 'node-exporter'
           static_configs:
             - targets: ['node-exporter:9100']  # Node Exporter의 주소
+  hostmetrics:  # 시스템 메트릭 수집기 추가
+    scrapers:
+      cpu:    # CPU 관련 메트릭 수집
+      load:   # 시스템 로드 수집
+      memory: # 메모리 관련 메트릭 수집
+      filesystem: # 파일시스템 관련 메트릭 수집
 
 processors:
   batch:
+    timeout: 5s  # 데이터 전송 대기 시간 설정
+#  memory_limiter:
+#    check_interval: 1s
+#    limit_mib: 4000  # 메모리 제한 설정
 
 exporters:
-  prometheusremotewrite:
-    endpoint: "http://prometheus:9090/api/v1/write"
-    tls:
-      insecure: true
-  otlphttp:
-    endpoint: "http://loki:3100/otlp"
+  #prometheusremotewrite:
+  #  endpoint: "http://prometheus:9090/api/v1/write"
+  #  tls:
+  #    insecure: true
   otlp:
-    endpoint: "tempo:4317"
+    endpoint: "http://apm-server:8200"  # APM 서버에서 트레이스 데이터를 받을 경로
     tls:
       insecure: true
-    #max_send_msg_size: 10485760
 
 service:
   pipelines:
@@ -34,11 +41,7 @@ service:
       receivers: [otlp]
       processors: [batch]
       exporters: [otlp]
-    logs:
-      receivers: [otlp]
-      exporters: [otlphttp]
     metrics:
-      receivers: [otlp, prometheus]
+      receivers: [otlp, prometheus, hostmetrics]
       processors: [batch]
-      exporters: [prometheusremotewrite]  
-
+      exporters: [otlp]
