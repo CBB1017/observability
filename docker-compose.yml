@@ -105,9 +105,14 @@ services:
       - DB_HOST=postgres
       - TARGET_ONE_HOST=app-b
       - TARGET_TWO_HOST=app-c
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-a
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
       - OTEL_SERVICE_NAME=app-a # service name for Span
-      - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-a # add custom resource attribute to Span for Grafana Trace to Logs feature
-      - MANAGEMENT_METRICS_TAGS_APPLICATION=app-a # override default value of management.metrics.tags.application in app/src/main/resources/application.properties
+#      - OTEL_NODE_RESOURCE_DETECTORS=env,host,os,serviceinstance,container
+#      - OTEL_RESOURCE_ATTRIBUTES="service.namespace=my-namespace" # add custom resource attribute to Span for Grafana Trace to Logs feature
+    command: >
+        node --require @opentelemetry/auto-instrumentations-node/register dist/app.js
     ports:
       - "8080:8080"
     networks:

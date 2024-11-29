@@ -17,7 +17,7 @@ processors:
 
 exporters:
   debug:
-    verbosity: detailed
+    verbosity: basic #detailed, expensive
   prometheusremotewrite:
     endpoint: "http://prometheus:9090/api/v1/write"
     tls:
