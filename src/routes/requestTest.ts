@@ -13,7 +13,7 @@ export default async function requestTestRoutes(
     const peanutsRepository = opts.dataSource.getRepository(Peanuts);
     fastify.get('/', async (request, reply) => {
         try {
-            fastify.log.error(request.headers.toString());
+            fastify.log.error(request.headers);
             fastify.log.error("Hello World!!");
             fastify.log.debug("Debugging log");
             fastify.log.info("Info log");
@@ -72,15 +72,9 @@ export default async function requestTestRoutes(
     });
     fastify.get('/chain', async (request, reply) => {
         try {
-            const TARGET_ONE_HOST = process.env.TARGET_ONE_HOST || 'localhost:8080';
-            const TARGET_TWO_HOST = process.env.TARGET_TWO_HOST || 'localhost:8080';
-
             fastify.log.debug('chain is starting');
 
-            await fastify.inject({
-                method: 'GET',
-                url: '/',
-            });
+            await axios.get(`http://localhost:8080`);
 
             fastify.log.debug('chain is starting');
 

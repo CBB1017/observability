@@ -32,6 +32,6 @@ export default async function registerPlugins(fastify: any) {
 
         // Histogram에 데이터 기록
         recordRequestDuration(duration, { method, status });
-        console.log('Recording duration:', duration, { method, status });
+        console.log('Recording duration:', duration, JSON.stringify({ method, status }));
     });
 }

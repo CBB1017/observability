@@ -9,6 +9,7 @@ import {ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION} from '@opentelemetry/semantic-c
 import {OTLPMetricExporter} from "@opentelemetry/exporter-metrics-otlp-grpc";
 import {OTLPLogExporter} from "@opentelemetry/exporter-logs-otlp-grpc";
 
+
 // Define Resources with Constants
 const resource = new Resource({
     [ATTR_SERVICE_NAME]: 'app-a',
@@ -70,7 +71,7 @@ const originalConsoleError = console.error;
 console.log = (...args: any[]) => {
     otelLogger.emit({
         severityText: 'INFO',
-        body: args.join(' '),
+        body: JSON.stringify(args.join(' ')),
         attributes: {},
         timestamp: Date.now(), // Optional: 현재 시간
     });
@@ -80,7 +81,7 @@ console.log = (...args: any[]) => {
 console.error = (...args: any[]) => {
     otelLogger.emit({
         severityText: 'ERROR',
-        body: args.join(' '),
+        body: JSON.stringify(args.join(' ')),
         attributes: {},
         timestamp: Date.now(), // Optional: 현재 시간
     });

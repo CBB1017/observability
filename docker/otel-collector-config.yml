@@ -13,7 +13,6 @@ receivers:
             - targets: ['node-exporter:9100']  # Node Exporter의 주소
 
 processors:
-  batch:
 
 exporters:
   debug:
