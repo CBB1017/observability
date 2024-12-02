@@ -97,7 +97,11 @@ docker-compose 내에 추가하여 시스템 메트릭도 확인할 수 있게 �
 - js에서 ts 설정을 함께 사용하는 프로젝트입니다.
 - opentelemetry SDK를 활용하여 service metric, application log, trace 전송. 노드 리소스 메트릭은 node-exporter로 전송.
 - datasource 연계 및 생성된 dashboard는 포함되지 않았습니다. https://github.com/blueswen/spring-boot-observability 를 참조하여 만들어보세요!
+# tempo <-> loki trace log 연동 버튼
+- 기존엔 모든 정보가 포함됐으나 docker loki driver 삭제로 인해 msg 필드만 전송(loki 기본 동작)
+- 따라서 tempo <-> loki 연동 버튼도 아래를 참고하여 변경합니다.
 - datasource - loki 설정에서 아래와 같이 변경![img.png](img.png)
+- datasource - tempo 설정에서 아래와 같이 변경![img_1.png](img_1.png)
 - ## 실행 방법
   ```bash
   wsl 실행 후 
