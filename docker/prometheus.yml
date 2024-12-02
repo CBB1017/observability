@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+
+storage:
+  exemplars:
+    max_exemplars: 100000 # 저장 가능한 최대 Exemplars 개수

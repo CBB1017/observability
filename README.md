@@ -1,6 +1,6 @@
 # observability
 https://github.com/blueswen/spring-boot-observability 를 참고하여 만든 관측가능성(observability) 구축 테스트.. 
-특정 버전이 아닌 24-10-22기준 latest 버전으로 구동시켜보고 싶었습니다.
+특정 버전이 아닌 24-10-22 기준 latest 버전으로 구동시켜보고 싶었습니다.
 
 #  openTelemetry로 수집 및 전송하여 tempo에 연동 참조글
 https://medium.com/@dudwls96/opentelemetry-grafana-loki-tempo-prometheus를-활용한-spring-boot-observability-구성하기-f977df45bb70
@@ -89,3 +89,27 @@ docker-compose 내에 추가하여 시스템 메트릭도 확인할 수 있게 �
 # TODO
 - 설정 파일에 command 녹이는 과정 필요.
 - 실제 MSA 방식으로 구축할 때 어떤 식으로 설계할 지 분석 필요.
+
+
+---
+
+## nodejs 버전 추가
+- js에서 ts 설정을 함께 사용하는 프로젝트입니다.
+- opentelemetry SDK를 활용하여 service metric, application log, trace 전송. 노드 리소스 메트릭은 node-exporter로 전송.
+- datasource 연계 및 생성된 dashboard는 포함되지 않았습니다. https://github.com/blueswen/spring-boot-observability 를 참조하여 만들어보세요!
+- ## 실행 방법
+  ```bash
+  wsl 실행 후 
+  cd docker
+  docker-compose up -d
+    ```
+- 현재 버전(24-12-02)으로 아래와 같은 오류가 발생하나 동작엔 이상없습니다. 추후 수정하겠습니다.
+- ```text
+    Error: @opentelemetry/api: Attempted duplicate registration of API: trace
+    ```
+- 구조가 변경되었는데, 기존 prometheus에서 scrape 해가던 방식에서 `PeriodicExportingMetricReader`를 이용해 직접 opentelemetry-collector로 전송합니다.
+- loki 또한 logProvider를 이용해 `BatchLogRecordProcessor` 방식으로 전송합니다.
+- 결국 trace, log, metric(service)를 앱에서 직접 opentelemetry-collector로 전송합니다.
+# TODO
+- SDK 중복 적용 시도 오류 수정
+- Exemplars를 이용한 tempo <-> loki 추적 테스트가 완료됐는데 이미지에 포함시키지는 않았습니다. 별도 이미지를 만들어서 공유하겠습니다.

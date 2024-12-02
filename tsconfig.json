@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,     // 데코레이터 사용 허용
+    "emitDecoratorMetadata": true,     // 메타데이터 생성
+    "strictPropertyInitialization": false, // (추가적으로) 속성 초기화 검사 비활성화
+    "module": "commonjs",
+    "target": "es2019",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "allowJs": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", ".env*"]
+}
