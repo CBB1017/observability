@@ -84,7 +84,7 @@ services:
       context: ../
       dockerfile: Dockerfile
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=8080
       - DB_HOST=postgres
       - TARGET_ONE_HOST=app-b
@@ -109,7 +109,7 @@ services:
       context: ../
       dockerfile: Dockerfile
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=8080
       - DB_HOST=postgres
       - TARGET_ONE_HOST=app-a
@@ -134,7 +134,7 @@ services:
       context: ../
       dockerfile: Dockerfile
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
       - PORT=8080
       - DB_HOST=postgres
       - TARGET_ONE_HOST=app-a

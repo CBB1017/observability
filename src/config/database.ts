@@ -7,7 +7,7 @@ export const postgresDataSource = new DataSource({
     username: process.env.DB_USER || "postgres",
     password: process.env.DB_PASS || "postgres",
     database: process.env.DB_NAME || "postgres",
-    entities: [process.env.NODE_ENV === "production" ? "dist/entities/*.js" : "src/entities/*.ts"],
+    entities: ["dist/entities/*.js"], // if you use in local uncomment [process.env.NODE_ENV === "production" ? "dist/entities/*.js" : "src/entities/*.ts"],
     synchronize: process.env.NODE_ENV !== "production",
     logging: true,
 });

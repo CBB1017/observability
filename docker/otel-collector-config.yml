@@ -37,5 +37,5 @@ service:
       receivers: [otlp]
       exporters: [otlphttp, debug]
     metrics:
-      receivers: [otlp]
+      receivers: [otlp, prometheus]
       exporters: [prometheusremotewrite, debug]

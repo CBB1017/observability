@@ -4,25 +4,11 @@ import {initializePostgresDatabase} from "./config/database";
 import {loadEnv} from "./config/env";
 import registerPlugins from "./plugins/plugins";
 import registerRoutes from "./routes";
-import {otelLogger} from "./plugins/tracer";
 
 loadEnv(); // 환경 변수 로드
 
 const fastify = Fastify({logger: true});
-// Fastify의 로그 후크를 활용하여 OpenTelemetry와 통합
-fastify.addHook('onRequest', (req, reply, done) => {
-    const logMessage = `Incoming request: ${req.method} ${req.url}`;
-    otelLogger.emit({
-        severityText: 'INFO',
-        body: logMessage,
-        attributes: {
-            method: req.method,
-            url: req.url,
-        },
-    });
-    req.log.info(logMessage);
-    done();
-});
+
 // 서버 실행
 const start = async () => {
     try {

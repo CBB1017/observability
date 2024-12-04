@@ -3,7 +3,7 @@ import {getNodeAutoInstrumentations} from '@opentelemetry/auto-instrumentations-
 import {OTLPTraceExporter} from '@opentelemetry/exporter-trace-otlp-http';
 import {MeterProvider, PeriodicExportingMetricReader} from '@opentelemetry/sdk-metrics';
 import {Resource} from '@opentelemetry/resources';
-import {context, metrics, trace} from "@opentelemetry/api";
+import {metrics} from "@opentelemetry/api";
 import {BatchLogRecordProcessor, LoggerProvider} from '@opentelemetry/sdk-logs';
 import {ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION} from '@opentelemetry/semantic-conventions';
 import {OTLPMetricExporter} from "@opentelemetry/exporter-metrics-otlp-grpc";
@@ -40,12 +40,6 @@ const meterProvider = new MeterProvider({
 // MeterProvider를 글로벌로 등록
 metrics.setGlobalMeterProvider(meterProvider);
 
-const meter = metrics.getMeter('app-a');
-const histogram = meter.createHistogram('http_server_requests_seconds', {
-    description: 'Duration of HTTP server request handling in seconds',
-    unit: 'ms',
-})
-
 // OTLP Metric Exporter 초기화
 const logExporter = new OTLPLogExporter({
     url: `${process.env.OTEL_EXPORTER_OTLP_ENDPOINT}`,
@@ -55,7 +49,6 @@ const logExporter = new OTLPLogExporter({
 const loggerProvider = new LoggerProvider({
     resource: resource,
 });
-
 
 // BatchLogRecordProcessor 추가 (Collector로 로그 전송)
 const batchProcessor = new BatchLogRecordProcessor(logExporter);
@@ -106,29 +99,3 @@ console.log('OpenTelemetry SDK started');
 process.on('SIGTERM', () => {
     sdk.shutdown().then(() => console.log('OpenTelemetry SDK shut down'));
 });
-
-/**
- * 요청 처리 시간 기록 함수
- * @param duration - 처리 시간 (초 단위)
- * @param labels - 요청 메서드 및 상태 코드 등의 라벨
- */
-export function recordRequestDuration(
-    duration: number,
-    labels: { method: string; status: number }
-) {
-    const currentSpan = trace.getSpan(context.active());
-    const attributes = {
-        ...labels,
-        'trace_id': currentSpan?.spanContext().traceId || 'unknown', // Trace ID를 라벨로 추가
-    };
-
-    try {
-        // console.log(meter)
-        // console.log(histogram)
-        histogram.record(duration, attributes, context.active());
-
-    } catch (e) {
-        console.log(e);
-    }
-
-}

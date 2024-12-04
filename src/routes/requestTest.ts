@@ -103,18 +103,19 @@ export default async function requestTestRoutes(
         if (!peanuts) {
             return reply.status(404).send({error: 'Peanuts character not found'});
         }
-        return peanuts;
+        return reply.send({ message: "retrieve is finished", results: [peanuts] });
     });
 
     // Create Peanuts
     fastify.post<{ Body: Peanuts }>('/peanuts', async (request, reply) => {
         const peanutsData = request.body;
+        fastify.log.info(peanutsData); // JSON 데이터를 로그로 출력
 
         try {
             const newPeanuts = peanutsRepository.create(peanutsData);
             const savedPeanuts = await peanutsRepository.save(newPeanuts);
             fastify.log.info('Create Peanuts Character');
-            return savedPeanuts;
+            reply.send({ message: "savedPeanuts", results: [savedPeanuts] });
         } catch (error) {
             fastify.log.error(error);
             reply.code(500).send({error: 'Failed to create Peanuts character'});
