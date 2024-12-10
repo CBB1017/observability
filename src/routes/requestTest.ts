@@ -97,28 +97,51 @@ export default async function requestTestRoutes(
     });
     fastify.get<{ Params: { id: number } }>('/peanuts/:id', async (request, reply) => {
         const id = request.params.id;
-        fastify.log.info('Get Peanuts Character by id');
+        fastify.log.info(`Get Peanuts Character by id: ${id}`);
 
-        const peanuts = await peanutsRepository.findOne({where: {id}});
-        if (!peanuts) {
-            return reply.status(404).send({error: 'Peanuts character not found'});
+        // Check cache
+        const cachedPeanuts = await fastify.redis.get(`peanuts:${id}`);
+        if (cachedPeanuts) {
+            fastify.log.info('Cache hit for Peanuts');
+            return reply.send({
+                message: 'Retrieve finished (from cache)',
+                results: [JSON.parse(cachedPeanuts)],
+            });
         }
-        return reply.send({ message: "retrieve is finished", results: [peanuts] });
+
+        // Fetch from database if not in cache
+        const peanuts = await peanutsRepository.findOne({ where: { id } });
+        if (!peanuts) {
+            return reply.status(404).send({ error: 'Peanuts character not found' });
+        }
+
+        // Cache the result
+        await fastify.redis.set(`peanuts:${id}`, JSON.stringify(peanuts), 'EX', 3600); // TTL: 3600 seconds
+        fastify.log.info('Cache updated for Peanuts');
+        return reply.send({ message: 'Retrieve finished', results: [peanuts] });
     });
 
-    // Create Peanuts
+    // Create or Update Peanuts with Cache Update
     fastify.post<{ Body: Peanuts }>('/peanuts', async (request, reply) => {
         const peanutsData = request.body;
-        fastify.log.info(peanutsData); // JSON 데이터를 로그로 출력
+        fastify.log.info('Create Peanuts Character');
 
         try {
             const newPeanuts = peanutsRepository.create(peanutsData);
             const savedPeanuts = await peanutsRepository.save(newPeanuts);
-            fastify.log.info('Create Peanuts Character');
-            reply.send({ message: "savedPeanuts", results: [savedPeanuts] });
+
+            // Update cache
+            await fastify.redis.set(
+                `peanuts:${savedPeanuts.id}`,
+                JSON.stringify(savedPeanuts),
+                'EX',
+                3600, // TTL: 3600 seconds
+            );
+            fastify.log.info('Cache updated for new Peanuts');
+            reply.send({ message: 'Peanuts character created', results: [savedPeanuts] });
         } catch (error) {
             fastify.log.error(error);
-            reply.code(500).send({error: 'Failed to create Peanuts character'});
+            reply.code(500).send({ error: 'Failed to create Peanuts character' });
         }
     });
 }

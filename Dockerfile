@@ -17,7 +17,7 @@ COPY . .
 RUN npm run build
 
 # Step 7: Expose the application port (replace 3000 with your app's port if different)
-EXPOSE 8088
+EXPOSE 8080
 
 # Step 8: Command to run the application
 CMD ["node", "dist/app.js"]

@@ -63,6 +63,9 @@ services:
       - "3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
     environment:
 #      - GF_AUTH_API_KEY_ENABLED=true
       - GF_SERVER_ROOT_URL=http://localhost:3000/grafana
@@ -79,6 +82,14 @@ services:
       - loki
       - tempo
 
+  app-front:
+    build:
+      context: ../front
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - monitoring
   app-a:
     build:
       context: ../
