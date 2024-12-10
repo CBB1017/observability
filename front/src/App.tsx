@@ -20,8 +20,8 @@ const App: React.FC = () => {
             const results: { url: string; status: number; data: unknown; }[] = [];
             for (const command of urls) {
                 for (let i = 0; i < command.repetitions; i++) {
-                    const response = await axios.get(command.url, {
-                        validateStatus: function (status) {
+                    await axios.get(command.url, {
+                        validateStatus: function () {
                             // 모든 상태 코드를 성공으로 처리
                             return true
                         },
@@ -116,8 +116,12 @@ const App: React.FC = () => {
             />
             <iframe
                 src="http://localhost:3000/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=1"
-                width="450" height="200"
+                width="700" height="200"
             />
+            <iframe
+                src="http://localhost:3000/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=20"
+                width="450" height="200"></iframe>
+
         </div>
     );
 };

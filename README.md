@@ -105,16 +105,24 @@ docker-compose 내에 추가하여 시스템 메트릭도 확인할 수 있게 �
 - ## 실행 방법
   ```bash
   wsl 실행 후 
-  cd docker
+  cd $projectDir/docker
   docker-compose up -d
+  이후 브라우저에서
+  http://localhost 접속하면 아래 화면 노출
     ```
-- 현재 버전(24-12-02)으로 아래와 같은 오류가 발생하나 동작엔 이상없습니다. 추후 수정하겠습니다.
+  ![img_2.png](img_2.png)
+- Run Siege Commands를 하면 실제 Siege 동작하는 건 아니고 request-script.sh를 실행하는 것과 같습니다.
+- Run Curl Commands는 trace.sh를 실행하는 것과 동일
+- (24-12-02 기준)으로 아래와 같은 오류가 발생하나 동작엔 이상없습니다. 추후 수정하겠습니다.
 - ```text
     Error: @opentelemetry/api: Attempted duplicate registration of API: trace
     ```
 - 구조가 변경되었는데, 기존 prometheus에서 scrape 해가던 방식에서 `PeriodicExportingMetricReader`를 이용해 직접 opentelemetry-collector로 전송합니다.
 - loki 또한 logProvider를 이용해 `BatchLogRecordProcessor` 방식으로 전송합니다.
 - 결국 trace, log, metric(service)를 앱에서 직접 opentelemetry-collector로 전송합니다.
+
+
 # TODO
 - SDK 중복 적용 시도 오류 수정
 - Exemplars를 이용한 tempo <-> loki 추적 테스트가 완료됐는데 이미지에 포함시키지는 않았습니다. 별도 이미지를 만들어서 공유하겠습니다.
+
