@@ -6,19 +6,21 @@ datasources:
     access: proxy
     url: http://loki:3100
     isDefault: false
+    uid: ce5nlm45wrzeoe
     jsonData:
       derivedFields:
-        - datasourceUid: ce5nlm45wrzeoe
+        - datasourceUid: ae5nlkpcdna4gb
           matcherRegex: trace_id
           matcherType: label
           name: TraceID
-          url: "${__value.raw}"
+          url: "$${__value.raw}"
           urlDisplayLabel: ""
   - name: prometheus
     type: prometheus
     access: proxy
     url: http://prometheus:9090
     isDefault: true
+    uid: de5nlb3u9qy2od
     jsonData:
       exemplarTraceIdDestinations:
         - datasourceUid: ce5nlm45wrzeoe
@@ -32,6 +34,7 @@ datasources:
     access: proxy
     url: http://tempo:3200
     isDefault: false
+    uid: ae5nlkpcdna4gb
     jsonData:
       search:
         filters:
@@ -47,9 +50,10 @@ datasources:
         timeShiftEnabled: false
       tracesToLogsV2:
         customQuery: true
-        datasourceUid: ae5nlkpcdna4gb
+        datasourceUid: ce5nlm45wrzeoe
         filterByTraceID: true
-        query: "{$__tags } | logfmt | trace_id=\"${__trace.traceId}\""
+        query: >
+          {$$__tags} | logfmt | trace_id="$${__trace.traceId}"
         spanEndTimeShift: "30m"
         spanStartTimeShift: "-30m"
         tags:
@@ -59,7 +63,8 @@ datasources:
         datasourceUid: de5nlb3u9qy2od
         queries:
           - name: trace_id
-            query: trace_id=\"${__trace.traceId}\"
+            query: |
+              trace_id="$${__trace.traceId}"
         spanEndTimeShift: "2m"
         spanStartTimeShift: "-2m"
         tags:

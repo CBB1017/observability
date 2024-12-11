@@ -115,11 +115,11 @@ const App: React.FC = () => {
                 }}
             />
             <iframe
-                src="http://localhost:3000/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=1"
+                src="http://localhost:3000/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=1&from=now-1h&to=now"
                 width="700" height="200"
             />
             <iframe
-                src="http://localhost:3000/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=20"
+                src="http://localhost:3000/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=20&from=now-24h&to=now"
                 width="450" height="200"></iframe>
 
         </div>

@@ -62,7 +62,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - grafana-data3:/var/lib/grafana
+      - grafana-data:/var/lib/grafana
       - ./grafana/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
       - ./grafana/dashboards:/var/lib/grafana/dashboards
@@ -203,4 +203,4 @@ volumes:
   loki-index:
   tempo-wal:
   tempo-blocks:
-  grafana-data3:
+  grafana-data:
