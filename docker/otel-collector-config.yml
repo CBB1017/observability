@@ -19,7 +19,7 @@ processors:
     send_batch_size: 1000
     timeout: 5s
 exporters:
-  logging:
+  debug:
     verbosity: basic #detailed, expensive
   prometheusremotewrite:
     endpoint: "http://prometheus:9090/api/v1/write"
@@ -36,11 +36,11 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlp, logging]
+      exporters: [otlp, debug]
     logs:
       receivers: [otlp]
-      exporters: [otlphttp, logging]
+      exporters: [otlphttp, debug]
     metrics:
       receivers: [otlp, prometheus]
       processors: [batch]
-      exporters: [prometheusremotewrite, logging]
+      exporters: [prometheusremotewrite, debug]
