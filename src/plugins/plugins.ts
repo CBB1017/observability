@@ -11,8 +11,9 @@ export default async function registerPlugins(fastify: any) {
         endpoint: "/metrics",
         name: "metrics",
         defaultMetrics: {enabled: true},
-        routeMetrics: {enabled: true, groupStatusCodes: true},
+        routeMetrics: {enabled: true, groupStatusCodes: true, routeBlacklist: ["/metrics"]},
         clearRegisterOnInit: false,
+
     };
     await fastify.register(fastifyMetrics, metricsOptions);
 

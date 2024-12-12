@@ -11,7 +11,7 @@ import {OTLPLogExporter} from "@opentelemetry/exporter-logs-otlp-grpc";
 
 // Define Resources with Constants
 const resource = new Resource({
-    [ATTR_SERVICE_NAME]: 'app-a',
+    [ATTR_SERVICE_NAME]: `${process.env.OTEL_SERVICE_NAME}`,
     [ATTR_SERVICE_VERSION]: '1.0.0',
 });
 
@@ -33,8 +33,7 @@ const metricReader = new PeriodicExportingMetricReader({
 
 // MeterProvider 초기화
 const meterProvider = new MeterProvider({
-    resource,
-    readers: [metricReader], // MetricReader 연결
+    resource
 });
 
 // MeterProvider를 글로벌로 등록
@@ -83,6 +82,7 @@ console.error = (...args: any[]) => {
 const sdk = new NodeSDK({
     traceExporter,
     resource,
+    metricReader,
     instrumentations: [
         getNodeAutoInstrumentations({
             '@opentelemetry/instrumentation-fastify': {enabled: true},

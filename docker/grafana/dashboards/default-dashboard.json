@@ -19,7 +19,6 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
   "links": [],
   "panels": [
     {
@@ -60,6 +59,86 @@
       ],
       "title": "[app-a] loki logs",
       "type": "logs"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "app-b 애플리케이션의 loki log를 보여줍니다.",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "interval": "5s",
+      "options": {
+        "dedupStrategy": "exact",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "{service_name=\"app-b\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "[app-b] loki logs",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "default": false,
+        "type": "loki",
+        "uid": "${datasource}"
+      },
+      "description": "app-c 애플리케이션의 loki log를 보여줍니다.",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 3,
+      "interval": "5s",
+      "options": {
+        "dedupStrategy": "exact",
+        "enableLogDetails": true,
+        "prettifyLogMessage": false,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": true
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${datasource}"
+          },
+          "editorMode": "code",
+          "expr": "{service_name=\"app-c\"}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "[app-c] loki logs",
+      "type": "logs"
     }
   ],
   "refresh": "",
@@ -71,7 +150,7 @@
         "current": {
           "selected": false,
           "text": "loki",
-          "value": "P982945308D3682D1"
+          "value": "ce5nlm45wrzeoe"
         },
         "hide": 0,
         "includeAll": false,
@@ -88,13 +167,13 @@
     ]
   },
   "time": {
-    "from": "2024-12-09T22:06:55.476Z",
-    "to": "2024-12-10T10:06:55.476Z"
+    "from": "now-1h",
+    "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "New dashboard",
   "uid": "ae6h49yp1qqyoa",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }
