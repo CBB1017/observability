@@ -1,18 +1,14 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
   name: observability-front
   namespace: observability
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+  labels:
+    app: observability
 spec:
-  rules:
-    -  http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: observability-front
-                port:
-                  number: 80
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80        # 클러스터 내부용
+      targetPort: 80  # 컨테이너 포트
+      nodePort: 30007 # 외부 접근용
