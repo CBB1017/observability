@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
         - name: observability-front
-          image: your-docker-repo/observability-front:latest
+          image: 192.168.246.2:5000/observability-front:latest
           ports:
             - containerPort: 80 # Service의 targetPort와 매칭
