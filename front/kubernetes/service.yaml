@@ -8,7 +8,7 @@ metadata:
 spec:
   type: NodePort
   selector: # Pod와 연결될 레이블
-    app: observability
+    app: observability-front
   ports:
     - protocol: TCP
       port: 80        # 클러스터 내부용
