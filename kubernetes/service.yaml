@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: observability-nodejs
+  namespace: observability
+  labels:
+    app: observability
+spec:
+  type: NodePort
+  selector: # Pod와 연결될 레이블
+    app: observability-nodejs
+  ports:
+    - protocol: TCP
+      port: 8080       # 클러스터 내부용
+      targetPort: 8080  # 컨테이너 포트
+      nodePort: 30080 # 외부 접근용

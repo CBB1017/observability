@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: observability-nodejs
+  namespace: observability
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: observability-nodejs # Service와 매칭
+  template:
+    metadata:
+      labels:
+        app: observability-nodejs # Service와 매칭
+    spec:
+      containers:
+        - name: observability-nodejs
+          image: 172.26.31.229:5000/observability-nodejs:latest
+          ports:
+            - containerPort: 8080 # Service의 targetPort와 매칭
