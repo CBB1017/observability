@@ -4,7 +4,7 @@ metadata:
   name: observability-nodejs
   namespace: observability
   labels:
-    app: observability
+    app: observability-nodejs
 spec:
   type: NodePort
   selector: # Pod와 연결될 레이블
