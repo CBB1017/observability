@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: observability-app-b-config
+  namespace: observability
+data:
+  DB_HOST: "postgres-master.postgres.svc.cluster.local"
+  DB_PORT: "5432"
+  TARGET_ONE_HOST: "app-a.observability.svc.cluster.local"
+  TARGET_TWO_HOST: "app-c.observability.svc.cluster.local"
+
