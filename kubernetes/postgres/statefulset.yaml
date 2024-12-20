@@ -27,8 +27,6 @@ spec:
           volumeMounts:
             - name: postgres-data
               mountPath: /var/lib/postgresql/data
-          # 설정 파일을 마운트할 추가 볼륨
-          volumeMounts:
             - name: postgres-config
               mountPath: /etc/postgresql-config
               readOnly: true

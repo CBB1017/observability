@@ -18,7 +18,8 @@ export default async function registerPlugins(fastify: any) {
     await fastify.register(fastifyMetrics, metricsOptions);
 
     await fastify.register(fastifyRedis, {
-        host: 'redis',
+        host: process.env.REDIS_HOST,
         port: 6379,
+        password: process.env.REDIS_PASSWORD,
     });
 }

@@ -4,7 +4,6 @@ metadata:
   annotations:
     meta.helm.sh/release-name: otel-collector
     meta.helm.sh/release-namespace: monitoring
-  creationTimestamp: "2024-12-17T00:17:28Z"
   labels:
     app.kubernetes.io/component: standalone-collector
     app.kubernetes.io/instance: otel-collector
@@ -15,8 +14,6 @@ metadata:
     helm.sh/chart: opentelemetry-collector-0.111.0
   name: otel-collector
   namespace: monitoring
-  resourceVersion: "191337"
-  uid: 06cefc14-8a49-4ea1-8db5-8b8ef323021a
 spec:
   clusterIP: 10.233.23.244
   clusterIPs:
@@ -57,5 +54,3 @@ spec:
     component: standalone-collector
   sessionAffinity: None
   type: ClusterIP
-status:
-  loadBalancer: {}

@@ -8,4 +8,5 @@ data:
   DB_PORT: "5432"
   TARGET_ONE_HOST: "app-b.observability.svc.cluster.local"
   TARGET_TWO_HOST: "app-c.observability.svc.cluster.local"
+  REDIS_HOST: "redis-master.redis.svc.cluster.local"
 

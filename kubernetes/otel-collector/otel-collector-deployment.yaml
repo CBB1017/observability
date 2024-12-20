@@ -5,8 +5,6 @@ metadata:
     deployment.kubernetes.io/revision: "5"
     meta.helm.sh/release-name: otel-collector
     meta.helm.sh/release-namespace: monitoring
-  creationTimestamp: "2024-12-17T00:17:28Z"
-  generation: 5
   labels:
     app.kubernetes.io/component: standalone-collector
     app.kubernetes.io/instance: otel-collector
@@ -16,8 +14,6 @@ metadata:
     helm.sh/chart: opentelemetry-collector-0.111.0
   name: otel-collector
   namespace: monitoring
-  resourceVersion: "197107"
-  uid: a559dc25-ee91-4815-8f8f-11d7adc646eb
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
@@ -37,7 +33,6 @@ spec:
       annotations:
         checksum/config: 130a0a2f3760c2a3b951fe41a3e94c454fc0daf21a05ce2049c87646e1f62afc
         kubectl.kubernetes.io/restartedAt: "2024-12-17T01:05:34Z"
-      creationTimestamp: null
       labels:
         app.kubernetes.io/instance: otel-collector
         app.kubernetes.io/name: opentelemetry-collector
@@ -109,7 +104,6 @@ spec:
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
-      serviceAccount: otel-collector-opentelemetry-collector
       serviceAccountName: otel-collector-opentelemetry-collector
       terminationGracePeriodSeconds: 30
       volumes:
@@ -118,25 +112,4 @@ spec:
           items:
           - key: relay
             path: relay.yaml
-          name: otel-collector-opentelemetry-collector
         name: opentelemetry-collector-configmap
-status:
-  availableReplicas: 1
-  conditions:
-  - lastTransitionTime: "2024-12-17T00:33:23Z"
-    lastUpdateTime: "2024-12-17T00:33:23Z"
-    message: Deployment has minimum availability.
-    reason: MinimumReplicasAvailable
-    status: "True"
-    type: Available
-  - lastTransitionTime: "2024-12-17T00:33:10Z"
-    lastUpdateTime: "2024-12-17T01:05:36Z"
-    message: ReplicaSet "otel-collector-opentelemetry-collector-658898dc68" has successfully
-      progressed.
-    reason: NewReplicaSetAvailable
-    status: "True"
-    type: Progressing
-  observedGeneration: 5
-  readyReplicas: 1
-  replicas: 1
-  updatedReplicas: 1

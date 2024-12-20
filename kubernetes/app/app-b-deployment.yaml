@@ -21,3 +21,9 @@ spec:
           envFrom:
           - configMapRef:
               name: observability-app-b-config
+          env:
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: app-secret
+                key: REDIS_PASSWORD
