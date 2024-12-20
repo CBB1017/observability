@@ -18,3 +18,7 @@ spec:
           image: 172.26.31.229:5000/observability-front:latest
           ports:
             - containerPort: 80 # Service의 targetPort와 매칭
+          envFrom:
+            - configMapRef:
+                name: observability-front-config
+

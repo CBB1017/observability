@@ -1,8 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: observability-config
+  name: observability-front-config
   namespace: observability
 data:
-  APP_ENV: "production"
+  REACT_APP_APP_A_HOST: "nodejs-app-a.observability"
+  REACT_APP_APP_B_HOST: "nodejs-app-b.observability"
+  REACT_APP_APP_C_HOST: "nodejs-app-c.observability"
+  REACT_APP_GRAFANA_HOST: "grafana.monitoring"
 
