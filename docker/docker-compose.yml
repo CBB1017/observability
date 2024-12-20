@@ -84,6 +84,13 @@ services:
     build:
       context: ../front
       dockerfile: Dockerfile
+      target: dev
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_APP_A_HOST=/app-a
+      - REACT_APP_APP_B_HOST=/app-b
+      - REACT_APP_APP_C_HOST=/app-c
+      - REACT_APP_GRAFANA_HOST=/grafana:3000
     ports:
       - "80:80"
     networks:
@@ -97,8 +104,8 @@ services:
       - NODE_ENV=development
       - PORT=8080
       - DB_HOST=postgres
-      - TARGET_ONE_HOST=app-b
-      - TARGET_TWO_HOST=app-c
+      - TARGET_ONE_HOST=/app-b
+      - TARGET_TWO_HOST=/app-c
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-a
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
@@ -122,8 +129,8 @@ services:
       - NODE_ENV=development
       - PORT=8080
       - DB_HOST=postgres
-      - TARGET_ONE_HOST=app-a
-      - TARGET_TWO_HOST=app-c
+      - TARGET_ONE_HOST=/app-a
+      - TARGET_TWO_HOST=/app-c
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-b
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
@@ -147,8 +154,8 @@ services:
       - NODE_ENV=development
       - PORT=8080
       - DB_HOST=postgres
-      - TARGET_ONE_HOST=app-a
-      - TARGET_TWO_HOST=app-b
+      - TARGET_ONE_HOST=/app-a
+      - TARGET_TWO_HOST=/app-b
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
       - OTEL_RESOURCE_ATTRIBUTES=compose_service=app-c
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc

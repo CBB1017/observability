@@ -4,9 +4,12 @@ metadata:
   name: observability-app-a-config
   namespace: observability
 data:
-  DB_HOST: "postgres-master.postgres.svc.cluster.local"
+  NODE_ENV: "production"
+  DB_HOST: "postgres-master.postgres"
   DB_PORT: "5432"
-  TARGET_ONE_HOST: "app-b.observability.svc.cluster.local"
-  TARGET_TWO_HOST: "app-c.observability.svc.cluster.local"
-  REDIS_HOST: "redis-master.redis.svc.cluster.local"
+  APP_HOST: "http://nodejs-app-a.observability:8080"
+  TARGET_ONE_HOST: "http://nodejs-app-b.observability:8081"
+  TARGET_TWO_HOST: "http://nodejs-app-c.observability:8082"
+  REDIS_HOST: "redis-master.redis"
+  
 

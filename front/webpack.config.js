@@ -1,6 +1,10 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
+const fs = require('fs');
+const envFilePath = `.env.${process.env.REACT_APP_NODE_ENV || 'development'}`;
+const envVars = dotenv.parse(fs.readFileSync(envFilePath));
 module.exports = {
 	mode: "development",
 	entry: "./src/index.tsx",
@@ -24,6 +28,9 @@ module.exports = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: "./public/index.html",
+		}),
+		new webpack.DefinePlugin({
+			'process.env': JSON.stringify(envVars),
 		}),
 	],
 	devServer: {

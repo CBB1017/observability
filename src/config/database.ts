@@ -9,6 +9,7 @@ export const postgresDataSource = new DataSource({
     database: process.env.DB_NAME || "postgres",
     entities: ["dist/entities/*.js"], // if you use in local uncomment [process.env.NODE_ENV === "production" ? "dist/entities/*.js" : "src/entities/*.ts"],
     synchronize: process.env.NODE_ENV !== "production",
+    migrations: ["dist/migrations/*.js"],
     logging: true,
 });
 

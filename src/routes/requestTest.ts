@@ -74,17 +74,17 @@ export default async function requestTestRoutes(
         try {
             fastify.log.debug('chain is starting');
 
-            await axios.get(`http://localhost:8080`);
+            await axios.get(`${process.env.APP_HOST}`);
 
             fastify.log.debug('chain is starting');
 
             // 외부 요청 1
-            const response1 = await axios.get(`http://${process.env.TARGET_ONE_HOST}:8080/io_task`);
-            fastify.log.info(`Response from ${process.env.TARGET_ONE_HOST}:8080/io_task:`, response1.data);
+            const response1 = await axios.get(`${process.env.TARGET_ONE_HOST}/io_task`);
+            fastify.log.info(`Response from ${process.env.TARGET_ONE_HOST}/io_task:`, response1.data);
 
             // 외부 요청 2
-            const response2 = await axios.get(`http://${process.env.TARGET_TWO_HOST}:8080/cpu_task`);
-            fastify.log.info(`Response from ${process.env.TARGET_TWO_HOST}:8080/cpu_task:`, response2.data);
+            const response2 = await axios.get(`${process.env.TARGET_TWO_HOST}/cpu_task`);
+            fastify.log.info(`Response from ${process.env.TARGET_TWO_HOST}/cpu_task:`, response2.data);
             fastify.log.debug('chain is finished');
             reply.send({ message: "chain is finished", results: [response1.data, response2.data] });
         } catch (error) {

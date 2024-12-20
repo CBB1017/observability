@@ -8,16 +8,16 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 # Step 4: Install dependencies
-RUN npm install
+RUN npm ci
 
 # Step 5: Copy the rest of the application code
 COPY . .
 
 # Step 6: Compile TypeScript
-RUN npm run build
+RUN npx tsc
+
 
 # Step 7: Expose the application port (replace 3000 with your app's port if different)
 EXPOSE 8080
 
-# Step 8: Command to run the application
-CMD ["node", "dist/app.js"]
+CMD ["sh", "-c", "npx typeorm migration:run --dataSource ./dist/config/database.js && node dist/app.js"]
