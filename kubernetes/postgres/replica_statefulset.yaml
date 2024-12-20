@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-replica
+  namespace: postgres
+spec:
+  serviceName: "postgres-replica"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-replica
+  template:
+    metadata:
+      labels:
+        app: postgres-replica
+    spec:
+      initContainers:
+        - name: init-replica
+          image: postgres:14
+          command:
+            - bash
+            - "-c"
+            - |
+              cp /etc/postgresql-config/pg_hba.conf /var/lib/postgresql/data/pg_hba.conf &&
+              cp /etc/postgresql-config/postgresql.conf /var/lib/postgresql/data/postgresql.conf &&
+              echo "primary_conninfo = 'host=postgres-master-0.postgres-master.postgres.svc.cluster.local port=5432 user=postgres password=postgres'" >> /var/lib/postgresql/data/postgresql.conf &&
+              touch /var/lib/postgresql/data/standby.signal
+          volumeMounts:
+            - name: postgres-config
+              mountPath: /etc/postgresql-config
+              readOnly: true
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+      containers:
+        - name: postgres
+          image: postgres:14
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD  # 비밀번호는 Secret에서 가져오기
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_DB
+              value: postgres    
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+          volumeMounts:
+            - name: postgres-config
+              mountPath: /etc/postgresql-config
+              readOnly: true
+      volumes:
+        - name: postgres-data
+          persistentVolumeClaim:
+            claimName: postgres-pvc-replica
+        - name: postgres-config
+          configMap:
+            name: postgres-config
+

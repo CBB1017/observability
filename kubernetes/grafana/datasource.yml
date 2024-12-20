@@ -1,0 +1,72 @@
+apiVersion: 1
+
+datasources:
+  - name: loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    isDefault: false
+    uid: ce5nlm45wrzeoe
+    jsonData:
+      derivedFields:
+        - datasourceUid: ae5nlkpcdna4gb
+          matcherRegex: trace_id
+          matcherType: label
+          name: TraceID
+          url: "$${__value.raw}"
+          urlDisplayLabel: ""
+  - name: prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    uid: de5nlb3u9qy2od
+    jsonData:
+      exemplarTraceIdDestinations:
+        - datasourceUid: ce5nlm45wrzeoe
+          name: trace_id
+          urlDisplayLabel: ""
+      httpMethod: POST
+      prometheusType: Prometheus
+      prometheusVersion: 2.50.1
+  - name: tempo
+    type: tempo
+    access: proxy
+    url: http://tempo:3200
+    isDefault: false
+    uid: ae5nlkpcdna4gb
+    jsonData:
+      search:
+        filters:
+          - id: service-name
+            operator: "="
+            scope: resource
+            tag: service.name
+          - id: span-name
+            operator: "="
+            scope: span
+            tag: name
+      traceQuery:
+        timeShiftEnabled: false
+      tracesToLogsV2:
+        customQuery: true
+        datasourceUid: ce5nlm45wrzeoe
+        filterByTraceID: true
+        query: >
+          {$$__tags} | logfmt | trace_id="$${__trace.traceId}"
+        spanEndTimeShift: "30m"
+        spanStartTimeShift: "-30m"
+        tags:
+          - key: compose_service
+            value: service_name
+      tracesToMetrics:
+        datasourceUid: de5nlb3u9qy2od
+        queries:
+          - name: trace_id
+            query: |
+              trace_id="$${__trace.traceId}"
+        spanEndTimeShift: "2m"
+        spanStartTimeShift: "-2m"
+        tags:
+          - key: compose_service
+            value: job

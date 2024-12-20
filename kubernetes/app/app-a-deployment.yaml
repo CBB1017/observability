@@ -1,23 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: app-b
+  name: app-a
   namespace: observability
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: app-b # Service와 매칭
+      app: app-a # Service와 매칭
   template:
     metadata:
       labels:
-        app: app-b # Service와 매칭
+        app: app-a # Service와 매칭
     spec:
+      imagePullSecrets:
+      - name: regcred
       containers:
-        - name: observability-nodejs
+        - name: observability-app
           image: 172.26.31.229:5000/observability-nodejs:latest
           ports:
-            - containerPort: 8081 # Service의 targetPort와 매칭
+            - containerPort: 8080 # Service의 targetPort와 매칭
           envFrom:
           - configMapRef:
-              name: observability-app-b-config
+              name: observability-app-a-config

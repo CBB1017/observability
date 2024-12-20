@@ -1,0 +1,14 @@
+auth:
+  enabled: true                 # Redis 인증 활성화
+  password: mypassword          # Redis 비밀번호 설정
+
+replica:
+  replicaCount: 2               # Replica Pod 개수
+  persistence:
+    enabled: true               # Replica의 데이터 지속성 활성화
+    size: 1Gi                   # Replica의 PersistentVolume 크기
+
+master:
+  persistence:
+    enabled: true               # Master의 데이터 지속성 활성화
+    size: 1Gi                   # Master의 PersistentVolume 크기

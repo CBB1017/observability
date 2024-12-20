@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv-replica
+spec:
+  capacity:
+    storage: 3Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain    
+  hostPath:
+    path: "/tmp/data/postgres-replica"  # 로컬 경로
+    type: DirectoryOrCreate  # 경로가 없으면 자동 생성
+
