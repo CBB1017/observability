@@ -10,6 +10,10 @@ RUN npm run build
 FROM nginx:alpine
 
 COPY --from=build /app/dist /usr/share/nginx/html
+
+# 환경 변수 삽입 스크립트 복사
+COPY env.sh /docker-entrypoint.d/env.sh
+
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["sh", "/docker-entrypoint.d/env.sh"]

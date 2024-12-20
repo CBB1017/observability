@@ -8,13 +8,13 @@ const App: React.FC = () => {
         try {
             setOutput("");
             const urls = [
-                { url: process.env.REACT_APP_APP_A_HOST + "/", concurrency: 1, repetitions: 10 },
-                { url: process.env.REACT_APP_APP_A_HOST + "/io_task", concurrency: 3, repetitions: 5 },
-                { url: process.env.REACT_APP_APP_A_HOST + "/cpu_task", concurrency: 2, repetitions: 5 },
-                { url: process.env.REACT_APP_APP_A_HOST + "/random_sleep", concurrency: 5, repetitions: 3 },
-                { url: process.env.REACT_APP_APP_A_HOST + "/random_status", concurrency: 2, repetitions: 10 },
-                { url: process.env.REACT_APP_APP_A_HOST + "/chain", concurrency: 2, repetitions: 3 },
-                { url: process.env.REACT_APP_APP_A_HOST + "/error_test", concurrency: 1, repetitions: 1 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/", concurrency: 1, repetitions: 10 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/io_task", concurrency: 3, repetitions: 5 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/cpu_task", concurrency: 2, repetitions: 5 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/random_sleep", concurrency: 5, repetitions: 3 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/random_status", concurrency: 2, repetitions: 10 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/chain", concurrency: 2, repetitions: 3 },
+                { url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/error_test", concurrency: 1, repetitions: 1 },
             ];
 
             const results: { url: string; status: number; data: unknown }[] = [];
@@ -46,27 +46,27 @@ const App: React.FC = () => {
             const curlRequests = [
                 {
                     method: "GET",
-                    url: process.env.REACT_APP_APP_A_HOST + "/",
+                    url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/",
                     headers: { traceparent: "00-df853039b602c93e641526aaa7d67b8c-339f2b7a83c7d606-01" },
                 },
                 {
                     method: "POST",
-                    url: process.env.REACT_APP_APP_A_HOST + "/peanuts",
+                    url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/peanuts",
                     data: { name: "Snoopy", description: "A cute beagle" },
                 },
                 {
                     method: "POST",
-                    url: process.env.REACT_APP_APP_A_HOST + "/peanuts",
+                    url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/peanuts",
                     data: { name: "Woodstock", description: "A cute bird" },
                 },
                 {
                     method: "POST",
-                    url: process.env.REACT_APP_APP_A_HOST + "/peanuts",
+                    url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/peanuts",
                     data: { name: "Charlie Brown", description: "Snoopy's owner" },
                 },
-                { method: "GET", url: process.env.REACT_APP_APP_A_HOST + "/peanuts/1" },
-                { method: "GET", url: process.env.REACT_APP_APP_A_HOST + "/peanuts/2" },
-                { method: "GET", url: process.env.REACT_APP_APP_A_HOST + "/peanuts/3" },
+                { method: "GET", url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/peanuts/1" },
+                { method: "GET", url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/peanuts/2" },
+                { method: "GET", url: 'REACT_APP_APP_A_HOST_PLACEHOLDER' + "/peanuts/3" },
             ];
 
             const results = [];
@@ -99,16 +99,16 @@ const App: React.FC = () => {
                 </button>
             </div>
             <div style={linkContainerStyle}>
-                <a href={process.env.REACT_APP_GRAFANA_HOST} target="_blank" rel="noopener noreferrer" style={linkStyle}>
+                <a href={'REACT_APP_APP_A_HOST_PLACEHOLDER'} target="_blank" rel="noopener noreferrer" style={linkStyle}>
                     Grafana
                 </a>
-                <a href={process.env.REACT_APP_APP_A_HOST} target="_blank" style={linkStyle}>
+                <a href={'REACT_APP_APP_A_HOST_PLACEHOLDER'} target="_blank" style={linkStyle}>
                     App A
                 </a>
-                <a href={process.env.REACT_APP_APP_B_HOST} target="_blank" style={linkStyle}>
+                <a href={'REACT_APP_APP_B_HOST_PLACEHOLDER'} target="_blank" style={linkStyle}>
                     App B
                 </a>
-                <a href={process.env.REACT_APP_APP_C_HOST} target="_blank" style={linkStyle}>
+                <a href={'REACT_APP_APP_C_HOST_PLACEHOLDER'} target="_blank" style={linkStyle}>
                     App C
                 </a>
             </div>
@@ -120,23 +120,23 @@ const App: React.FC = () => {
             />
             <div style={iframeContainerStyle}>
                 <iframe
-                    src={process.env.REACT_APP_GRAFANA_HOST + "/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=1&from=now-1h&to=now"}
+                    src={'REACT_APP_GRAFANA_HOST_PLACEHOLDER' + "/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=1&from=now-1h&to=now"}
                     style={iframeLogStyle}
                 />
                 <iframe
-                    src={process.env.REACT_APP_GRAFANA_HOST + "/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=2&from=now-1h&to=now"}
+                    src={'REACT_APP_GRAFANA_HOST_PLACEHOLDER' + "/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=2&from=now-1h&to=now"}
                     style={iframeLogStyle}
                 />
                 <iframe
-                    src={process.env.REACT_APP_GRAFANA_HOST + "/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=3&from=now-1h&to=now"}
+                    src={'REACT_APP_GRAFANA_HOST_PLACEHOLDER' + "/grafana/d-solo/ae6h49yp1qqyoa/new-dashboard?orgId=1&refresh=10s&panelId=3&from=now-1h&to=now"}
                     style={iframeLogStyle}
                 />
                 <iframe
-                    src={process.env.REACT_APP_GRAFANA_HOST + "/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=20&from=now-24h&to=now"}
+                    src={'REACT_APP_GRAFANA_HOST_PLACEHOLDER' + "/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=20&from=now-24h&to=now"}
                     style={iframeMetricStyle}
                 />
                 <iframe
-                    src={process.env.REACT_APP_GRAFANA_HOST + "/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=16&from=now-24h&to=now"}
+                    src={'REACT_APP_GRAFANA_HOST_PLACEHOLDER' + "/grafana/d-solo/rYdddlPWk/node-exporter-full?orgId=1&refresh=10s&panelId=16&from=now-24h&to=now"}
                     style={iframeMetricStyle}
                 />
             </div>
