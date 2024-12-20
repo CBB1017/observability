@@ -12,8 +12,9 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # 환경 변수 삽입 스크립트 복사
-COPY env.sh /docker-entrypoint.d/env.sh
+COPY env.sh /usr/share/nginx/html/env.sh
+RUN chmod +x /usr/share/nginx/html/env.sh
 
 EXPOSE 80
 
-CMD ["sh", "/docker-entrypoint.d/env.sh"]
+CMD ["sh", "/usr/share/nginx/html/env.sh"]

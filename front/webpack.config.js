@@ -1,8 +1,10 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const fs = require('fs');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
 const dotenv = require('dotenv');
-require('dotenv').config();
+const fs = require('fs');
+const envFilePath = `.env.${process.env.NODE_ENV || 'development'}`;
+const envVars = dotenv.parse(fs.readFileSync(envFilePath));
 module.exports = {
 	mode: "development",
 	entry: "./src/index.tsx",
@@ -26,17 +28,9 @@ module.exports = {
 	plugins: [
 		new HtmlWebpackPlugin({
 			template: "./public/index.html",
-			inject: 'body',
-			templateParameters: () => {
-				// .env 파일 읽기
-				const envConfig = dotenv.parse(fs.readFileSync('.env'));
-				const envVars = Object.keys(envConfig).reduce((acc, key) => {
-					acc[key] = envConfig[key];
-					return acc;
-				}, {});
-
-				return { envVars };
-			},
+		}),
+		new webpack.DefinePlugin({
+			'process.env': JSON.stringify(envVars),
 		}),
 	],
 	devServer: {
