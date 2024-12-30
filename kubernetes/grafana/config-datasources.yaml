@@ -10,10 +10,11 @@ data:
     - name: loki
       type: loki
       access: proxy
-      url: http://loki.logging:3100
+      url: http://loki-query-frontend.observability:3100
       isDefault: false
       uid: ce5nlm45wrzeoe
       jsonData:
+        httpHeaderName1: "X-Scope-OrgID"
         derivedFields:
           - datasourceUid: ae5nlkpcdna4gb
             matcherRegex: trace_id
@@ -21,10 +22,12 @@ data:
             name: TraceID
             url: "$${__value.raw}"
             urlDisplayLabel: ""
+      secureJsonData:
+        httpHeaderValue1: "admin"
     - name: prometheus
       type: prometheus
       access: proxy
-      url: http://prometheus-server.monitoring:9090
+      url: http://prometheus-server.monitoring
       isDefault: true
       uid: de5nlb3u9qy2od
       jsonData:
@@ -38,7 +41,7 @@ data:
     - name: tempo
       type: tempo
       access: proxy
-      url: http://tempo.tracing:3200
+      url: http://tempo.tracing:3100
       isDefault: false
       uid: ae5nlkpcdna4gb
       jsonData:

@@ -10,3 +10,4 @@ spec:
   hostPath:
     path: /data
     type: DirectoryOrCreate
+  storageClassName: prometheus-server

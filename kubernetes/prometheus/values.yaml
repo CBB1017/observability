@@ -312,17 +312,11 @@ server:
 
   ## Additional Prometheus server Volume mounts
   ##
-  extraVolumeMounts:
-    - name: prometheus-data
-      mountPath: /data
+  extraVolumeMounts: []
 
   ## Additional Prometheus server Volumes
   ##
-  extraVolumes:
-    - name: prometheus-data
-      hostPath:
-        path: /data # 반드시 존재하거나, 자동 생성될 디렉토리
-        type: DirectoryOrCreate
+  extraVolumes: []
 
   ## Additional Prometheus server hostPath mounts
   ##
@@ -516,7 +510,7 @@ server:
     ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
     ##   GKE, AWS & OpenStack)
     ##
-    # storageClass: "-"
+    storageClass: "prometheus-server"
 
     ## Prometheus server data Persistent Volume Binding Mode
     ## If defined, volumeBindingMode: <volumeBindingMode>
@@ -1268,6 +1262,8 @@ alertmanager:
 
   persistence:
     size: 2Gi
+    storageClassName: prometheus-alertmanager
+    storageClass: prometheus-alertmanager
 
   podSecurityContext:
     runAsUser: 65534

@@ -14,10 +14,10 @@ loki:
     - -config.expand-env=true
   storage:
     s3:
-      s3: s3://test-k8s-loki-minio/ #bucket name
+      s3: s3://test-k8s-loki-minio #bucket name
       endpoint: http://loki-minio.observability.svc.cluster.local:9000
-      secretAccessKey: <your-secret> #S3 bucket을 사용
-      accessKeyId: <your-id> #S3 bucket을 사용
+      secretAccessKey: <key> #S3 bucket을 사용
+      accessKeyId:  <key> #S3 bucket을 사용
       signatureVersion: null
       s3ForcePathStyle: false
       insecure: true
@@ -46,25 +46,25 @@ loki:
     volume_enabled: true
 
 chunksCache:
-  allocatedMemory: 500
+  allocatedMemory: 200
 
 deploymentMode: Distributed
 
 ingester:
-  replicas: 3 # To ensure data durability with replication
+  replicas: 2 # To ensure data durability with replication
   zoneAwareReplication:
     enabled: false
 querier:
-  replicas: 3 # Improve query performance via parallelism
-  maxUnavailable: 2
+  replicas: 2 # Improve query performance via parallelism
+  maxUnavailable: 1
 queryFrontend:
   replicas: 2
   maxUnavailable: 1
 queryScheduler:
   replicas: 2
 distributor:
-  replicas: 3
-  maxUnavailable: 2
+  replicas: 2
+  maxUnavailable: 1
 compactor:
   replicas: 1
 indexGateway:
@@ -99,4 +99,5 @@ minio:
   enabled: true
   persistence:
     size: 5Gi
+    accessMode: ReadWriteOnce
     storageClass: minio
