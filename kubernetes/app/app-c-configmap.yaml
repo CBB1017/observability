@@ -11,3 +11,5 @@ data:
   TARGET_ONE_HOST: "http://nodejs-app-a.observability:8080"
   TARGET_TWO_HOST: "http://nodejs-app-b.observability:8081"
   REDIS_HOST: "redis-master.redis"
+  OTEL_SERVICE_NAME: "app-c"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://opentelemetry-collector.observability:4317"

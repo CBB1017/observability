@@ -91,16 +91,17 @@ configMap:
 # Base collector configuration.
 # Supports templating. To escape existing instances of {{ }}, use {{` <original content> `}}.
 # For example, {{ REDACTED_EMAIL }} becomes {{` {{ REDACTED_EMAIL }} `}}.
+
 config:
   exporters:
     otlphttp/prometheus:
-      endpoint: http://prometheus-server.observability.svc.cluster.local:9090/api/v1/write
+      endpoint: http://prometheus-server.monitoring.svc.cluster.local:9090/api/v1/write
       tls:
         insecure: true
     otlphttp/loki:
       endpoint: http://loki-distributor.observability.svc.cluster.local:3100/loki/api/v1/push
     otlp/tempo:
-      endpoint: http://tempo.observability.svc.cluster.local:4317
+      endpoint: http://tempo.tracing.svc.cluster.local:4317
       tls:
         insecure: true
   extensions:

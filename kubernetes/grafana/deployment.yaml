@@ -22,7 +22,7 @@ spec:
             # Datasources 설정 마운트
             - name: grafana-datasources
               mountPath: /etc/grafana/provisioning/datasources
-              readOnly: true
+              readOnly: false
 
             # Dashboards 설정 마운트
             - name: grafana-dashboards
