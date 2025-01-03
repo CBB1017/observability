@@ -6,11 +6,10 @@ metadata:
   labels:
     app: app-c
 spec:
-  type: NodePort
+  type: ClusterIP
   selector: # Pod와 연결될 레이블
     app: app-c
   ports:
     - protocol: TCP
       port: 8082       # 클러스터 내부용
       targetPort: 8080  # 컨테이너 포트
-      nodePort: 30802 # 외부 접근용
